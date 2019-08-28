@@ -21,7 +21,7 @@ const mysql = require('mysql2');
 const con = mysql.createConnection(
     {host:'localhost', user: 'root', database: 'digitaljournal'}
 );
-con.promise().query('SELECT * FROM `users`')
+con.promise().query('SELECT * FROM `posts` WHERE user_id = ?',[res.locals.user.id])
   .then( ([rows,fields]) => {
     console.log(rows);
     res.status(200).json({
@@ -38,15 +38,49 @@ con.promise().query('SELECT * FROM `users`')
 router.post('/journals', (req, res) => {
 
 
-    // get the client
+    // if (!req.headers.authorization) {
+    //     return res.status(401).json({status: 401, data: {}, message: 'Unauthorized.'});
+    // }
+
+    // const token = req.headers.authorization.split(' ')[1];
+
+    // return jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    //     if (err) { return res.status(401).json({status: 401, data: {}, message: 'Unauthorized.'}); }
+
+    //     const userId = decoded.id;
+
+    //     console.log(req.body);
+    
+    //     // get the client
+    //     const mysql = require('mysql2');
+    //     // const user_id=res.locals.user.id
+    //     // create the connection
+    //     const con = mysql.createConnection(
+    //         {host:'localhost', user: 'root', database: 'digitaljournal'}
+    //     );
+    //     con.promise().query("INSERT INTO posts (Title, Content)    VALUES (?,?,?)",[req.body.title,req.body.content,userId])
+    //       .then( ([rows,fields]) => {
+    //         // console.log(rows);
+    //         res.status(200).json({
+    //             status: 200,
+    //             data:rows,
+    //             message: {},
+    //         });
+    //       })
+    //       .catch(console.log)
+    //       .then( () => con.end());
+    // });
+
+
     const mysql = require('mysql2');
+    // const user_id=res.locals.user.id
     // create the connection
     const con = mysql.createConnection(
         {host:'localhost', user: 'root', database: 'digitaljournal'}
     );
-    con.promise().query("INSERT INTO posts (Title, Content)    VALUES ('John', 'Doe')")
+    con.promise().query("INSERT INTO posts (Title, Content,user_id)    VALUES (?,?,?)",[req.body.title,req.body.content,res.locals.user.id])
       .then( ([rows,fields]) => {
-        console.log(rows);
+        // console.log(rows);
         res.status(200).json({
             status: 200,
             data:rows,
@@ -55,6 +89,8 @@ router.post('/journals', (req, res) => {
       })
       .catch(console.log)
       .then( () => con.end());
+
+   
      
     });
 

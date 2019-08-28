@@ -24,12 +24,14 @@ const Nav = ( {children} ) => {
     const isAuth = Auth.isUserAuthenticated();
     
     return (
-        <div>
-            <div>
+        <div >
+            <div className="dj-center dj-menu">
+                <div className="navbar-start">
                 <NavLinkItem to="/" label="Home" />&mdash;
                 {isAuth ? <AuthNavItems/> : <UnauthNavItems/>}
+                </div>
             </div>
-            <div>
+            <div className="dj-center">
                 {children}
             </div>
         </div>

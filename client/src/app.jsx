@@ -7,7 +7,7 @@ import Nav from './components/Nav.jsx';
 const routeComponents = routes.map(({path, component}, key) => <Route exact path={path} component={component} key={key} />);
 
 const App = () => (
-        <div className="dj-center">
+        <div >
             <BrowserRouter>
                 <Nav>
                     <Switch>

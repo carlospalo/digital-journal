@@ -10,58 +10,18 @@ class ProtectedPage extends React.Component {
         user: {
           email: '',
           password: ''
-        }
+        },
+        post:{
+            title:'',
+            content:''
+        },
+        posts:[]
     };
 
-    
-      changeUser = (event) => {
-        const field = event.target.name;
-        const user = this.state.user;
-        user[field] = event.target.value;
-    
-        this.setState({
-          user
-        });
-      }
-    
-      processForm = (event) => {
-        event.preventDefault();
-        
-        const email = this.state.user.email;
-        const password = this.state.user.password;
-        const formData = {email, password};
-        
-        fetch("/auth/signup", {
-            body: JSON.stringify(formData),
-            headers: {
-                'content-type': 'application/json',
-            },
-            method: 'POST',
-        })
-        .then(res => res.json())
-        .then((result) => {
-                if (result.status === 200) {
-                    this.setState({
-                        errors: {}
-                    });
-                    Auth.authenticateUser(result.data.token);
-                    this.props.history.push("/protected");
-                } else {
-                    let errors = result.data.errors ? result.data.errors : {};
-                    errors.summary = result.message;
-                    this.setState({errors});
-                }
-            },
-            (error) => {
-                console.log('ERROR',error);
-            }
-          );
-      }
-    componentDidMount() {
-        if (!Auth.isUserAuthenticated()) {
-            return this.props.history.push("/login");
-        }
-        fetch("/api/protected", {
+     fetchApi(url) {
+         console.log('holi');
+         
+         fetch("/api/journals/", {
             headers: {
                 'Authorization': `bearer ${Auth.getToken()}`,
                 'content-type': 'application/json',
@@ -70,22 +30,77 @@ class ProtectedPage extends React.Component {
         })
         .then(res => res.json())
         .then((result) => {
-            if (result.status === 200) {
-                this.setState({
-                    secretData: result.data
-                });
-            }},
+                if (result.status === 200) {
+                    console.log(result);
+        const posts = result.data
+        this.setState({
+            posts
+          });
+                    
+                } else {
+                  console.log('holi');
+                }
+                  
+            },
             (error) => {
                 console.log('ERROR',error);
             }
-        );
+          );
+      };
+      changeUser = (event) => {
+        const field = event.target.name;
+        const post = this.state.post;
+        post[field] = event.target.value;
+    
+        this.setState({
+          post
+        });
+      }
+    
+      processForm = (event) => {
+        event.preventDefault();
+        
+        const title = this.state.post.title;
+        const content = this.state.post.content;
+        const formData = {title, content};
+        
+        fetch("/api/journals/", {
+            body: JSON.stringify(formData),
+            headers: {
+                'Authorization': `bearer ${Auth.getToken()}`,
+                'content-type': 'application/json',
+            },
+            method: 'POST',
+        })
+        .then(res => res.json())
+        .then((result) => {
+                if (result.status === 200) {
+                    console.log(result);
+                    
+                } else {
+                  console.log('holi');
+                }
+                  this.fetchApi();
+            },
+            (error) => {
+                console.log('ERROR',error);
+            }
+          );
+      }
+    componentDidMount() {
+        this.fetchApi();
     }
 
   /**
    * Render the component.
    */
   render() {
-    return (<Protected secretData={this.state.secretData} />);
+    return (<Protected secretData={this.state.secretData}  onSubmit={this.processForm}
+        onChange={this.changeUser}
+        errors={this.state.errors}
+        post={this.state.post} 
+        posts={this.state.posts}
+        />);
   }
 
 }

@@ -1,3 +1,33 @@
 .dj-center{
   text-align: center
 }
+.dj-menu{
+  padding: 18px 0px;
+  box-shadow: rgba(0, 0, 0, 0.75) 0px 5px 10px -5px;
+  /* margin-bottom: 10px; */
+  z-index: 992;
+  background:white
+  
+}
+body{
+  background: #ECF0F3;
+  min-height: 100vh
+}
+.dj-form{
+  width: 80vh;
+  margin: 0 auto;
+}
+.field{
+  margin-bottom:12px
+}
+.card-heading{
+  padding: 18px 0px;
+}
+.dj-card{
+  width: 80vw;
+  margin-bottom: 25px!important;
+  margin: 0 auto;
+}
+.dj-card-container{
+  padding: 20px 0px;
+}
