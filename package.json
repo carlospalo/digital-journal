@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --use_strict index.js",
+    "heroku-postbuild": "webpack",
     "test": "mocha --exit"
   },
   "author": "Tomer Ron",
