@@ -4,7 +4,9 @@
   "description": "Journal App",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --use_strict index.js",
+    "start": "node index.js",
+    "dev": "nodemon --use_strict index.js",
+
     "test": "mocha --exit"
   },
   "engines": {
