@@ -24,7 +24,7 @@ router.get('/journals', (req, res) => {
 
 // create the connection
 var connection = mysql.createConnection(con);
-connection.promise().query('SELECT * FROM `posts` WHERE user_id = ?',[res.locals.user.id])
+connection.promise().query('SELECT * FROM `Posts` WHERE user_id = ?',[res.locals.user.id])
   .then( ([rows,fields]) => {
     console.log(rows);
     res.status(200).json({
@@ -83,7 +83,7 @@ router.post('/journals', (req, res) => {
     // );
 var connection = mysql.createConnection(con);
 
-connection.promise().query("INSERT INTO posts (Title, Content,user_id)    VALUES (?,?,?)",[req.body.title,req.body.content,res.locals.user.id])
+connection.promise().query("INSERT INTO Posts (Title, Content,user_id)    VALUES (?,?,?)",[req.body.title,req.body.content,res.locals.user.id])
       .then( ([rows,fields]) => {
         // console.log(rows);
         res.status(200).json({
