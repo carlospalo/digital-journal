@@ -1,6 +1,11 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = new express.Router();
+const mysql = require('mysql2');
+
+
+var con = require('./db.js'); 
+
 
 router.get('/protected', (req, res) => {
     res.status(200).json({
@@ -16,12 +21,10 @@ router.get('/journals', (req, res) => {
 
 
 // get the client
-const mysql = require('mysql2');
+
 // create the connection
-const con = mysql.createConnection(
-    {host:'localhost', user: 'root', database: 'digitaljournal'}
-);
-con.promise().query('SELECT * FROM `posts` WHERE user_id = ?',[res.locals.user.id])
+var connection = mysql.createConnection(con);
+connection.promise().query('SELECT * FROM `posts` WHERE user_id = ?',[res.locals.user.id])
   .then( ([rows,fields]) => {
     console.log(rows);
     res.status(200).json({
@@ -31,7 +34,7 @@ con.promise().query('SELECT * FROM `posts` WHERE user_id = ?',[res.locals.user.i
     });
   })
   .catch(console.log)
-  .then( () => con.end());
+  .then( () => connection.end());
  
 });
 
@@ -72,13 +75,15 @@ router.post('/journals', (req, res) => {
     // });
 
 
-    const mysql = require('mysql2');
-    // const user_id=res.locals.user.id
-    // create the connection
-    const con = mysql.createConnection(
-        {host:'localhost', user: 'root', database: 'digitaljournal'}
-    );
-    con.promise().query("INSERT INTO posts (Title, Content,user_id)    VALUES (?,?,?)",[req.body.title,req.body.content,res.locals.user.id])
+    // const mysql = require('mysql2');
+    // // const user_id=res.locals.user.id
+    // // create the connection
+    // const con = mysql.createConnection(
+    //     {host:'localhost', user: 'root', database: 'digitaljournal'}
+    // );
+var connection = mysql.createConnection(con);
+
+connection.promise().query("INSERT INTO posts (Title, Content,user_id)    VALUES (?,?,?)",[req.body.title,req.body.content,res.locals.user.id])
       .then( ([rows,fields]) => {
         // console.log(rows);
         res.status(200).json({
@@ -88,7 +93,7 @@ router.post('/journals', (req, res) => {
         });
       })
       .catch(console.log)
-      .then( () => con.end());
+      .then( () => connection.end());
 
    
      
