@@ -5,8 +5,9 @@ module.exports = (sequelize, DataTypes) => {
         id: {
             allowNull: false,
             primaryKey: true,
-            type: DataTypes.INTEGER,
-            defaultValue: DataTypes.INTEGER
+            autoIncrement: true,
+            type: DataTypes.INTEGER
+            
         },
         email: {
             allowNull: false,
