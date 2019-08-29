@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon --use_strict index.js",
-
+    "heroku-postbuild": "webpack",
     "test": "mocha --exit"
   },
   "engines": {
