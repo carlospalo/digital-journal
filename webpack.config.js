@@ -16,7 +16,12 @@ module.exports = {
                 plugins: ["transform-class-properties"],
                 presets: ["react", "es2015"]
             },
-        }],
+        },
+        {
+            test: /\.(css|less)$/,
+            use: ["style-loader", "css-loader"]
+          }
+        ],
     },
-    // watch: true
+    watch: true
 };

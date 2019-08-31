@@ -4,38 +4,97 @@ const router = new express.Router();
 const mysql = require('mysql2');
 
 
-var con = require('./db.js'); 
+var con = require('./db.js');
 
 
 router.get('/protected', (req, res) => {
     res.status(200).json({
         status: 200,
         data: {
-              secretMessage: "This is a secret message from the API."
+            secretMessage: "This is a secret message from the API."
         },
         message: {},
     });
 });
 
+
+// router.update('/journals', (req, res) => {
+//     var connection = mysql.createConnection(con);
+//     connection.promise().query('SELECT * FROM `Posts` WHERE user_id = ?', [res.locals.user.id])
+//         .then(([rows, fields]) => {
+//             console.log(rows);
+//             res.status(200).json({
+//                 status: 200,
+//                 data: rows,
+//                 message: {},
+//             });
+//         })
+//         .catch(console.log)
+//         .then(() => connection.end());
+
+// });
+router.delete('/journals/:user_id', (req, res) => {
+    
+    var connection = mysql.createConnection(con);
+    connection.promise().query('DELETE FROM `Posts` WHERE id = ?',
+    [req.params.user_id])
+        .then(([rows, fields]) => {
+            console.log(rows);
+            res.status(200).json({
+                status: 200,
+                data: rows,
+                message: {},
+            });
+        })
+        .catch(console.log)
+        .then(() => connection.end());
+    // res.status(200).json({
+    //     status: 200,
+    //     data: req.params.user_id,
+    //     message: {},
+    // });
+
+}); 
+
+
 router.get('/journals', (req, res) => {
 
 
-// get the client
+    // get the client
 
-// create the connection
-var connection = mysql.createConnection(con);
-connection.promise().query('SELECT * FROM `Posts` WHERE user_id = ?',[res.locals.user.id])
-  .then( ([rows,fields]) => {
-    console.log(rows);
-    res.status(200).json({
-        status: 200,
-        data:rows,
-        message: {},
-    });
-  })
-  .catch(console.log)
-  .then( () => connection.end());
- 
+    // create the connection
+    var connection = mysql.createConnection(con);
+    connection.promise().query('SELECT * FROM `Posts` WHERE user_id = ?', [res.locals.user.id])
+        .then(([rows, fields]) => {
+            console.log(rows);
+            res.status(200).json({
+                status: 200,
+                data: rows,
+                message: {},
+            });
+        })
+        .catch(console.log)
+        .then(() => connection.end());
+
+});
+
+router.post('/journals/:post_id', (req, res) => {
+    var connection = mysql.createConnection(con);
+
+    connection.promise().query("UPDATE  Posts SET Title=?, Content=? WHERE id = ? ", [req.body.Title, req.body.Content, req.params.post_id])
+        .then(([rows, fields]) => {
+            // console.log(rows);
+            res.status(200).json({
+                status: 200,
+                data: rows,
+                message: {},
+            });
+        })
+        .catch(console.log)
+        .then(() => connection.end());
+
+
+
 });
 
 router.post('/journals', (req, res) => {
@@ -53,7 +112,7 @@ router.post('/journals', (req, res) => {
     //     const userId = decoded.id;
 
     //     console.log(req.body);
-    
+
     //     // get the client
     //     const mysql = require('mysql2');
     //     // const user_id=res.locals.user.id
@@ -81,23 +140,23 @@ router.post('/journals', (req, res) => {
     // const con = mysql.createConnection(
     //     {host:'localhost', user: 'root', database: 'digitaljournal'}
     // );
-var connection = mysql.createConnection(con);
+    var connection = mysql.createConnection(con);
 
-connection.promise().query("INSERT INTO Posts (Title, Content,user_id)    VALUES (?,?,?)",[req.body.title,req.body.content,res.locals.user.id])
-      .then( ([rows,fields]) => {
-        // console.log(rows);
-        res.status(200).json({
-            status: 200,
-            data:rows,
-            message: {},
-        });
-      })
-      .catch(console.log)
-      .then( () => connection.end());
+    connection.promise().query("INSERT INTO Posts (Title, Content,user_id)    VALUES (?,?,?)", [req.body.Title, req.body.Content, res.locals.user.id])
+        .then(([rows, fields]) => {
+            // console.log(rows);
+            res.status(200).json({
+                status: 200,
+                data: rows,
+                message: {},
+            });
+        })
+        .catch(console.log)
+        .then(() => connection.end());
 
-   
-     
-    });
+
+
+});
 
 router.get('/me', (req, res) => {
     res.status(200).json({
